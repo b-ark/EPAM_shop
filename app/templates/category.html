@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Products</title>
+{% endblock %}
+
+{% block nav %}
+<li><a href="/" class="nav-link px-2 text-white">Home</a></li>
+<li><a href="/products" class="nav-link px-2 text-white">Products</a></li>
+<li><a href="/categories" class="nav-link px-2 text-secondary">Categories</a></li>
+<li><a href="/search" class="nav-link px-2 text-white">Search</a></li>
+{% endblock %}
+
+{% block body %}
+<div class="album py-5 bg-light">
+    <div class="container">
+        <div class="col">
+            <p class="h1">{{ data.title }} #{{ data.id }}</p>
+            <p class="lead">{{ data.description }}</p>
+            <div class="bd-example">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                        <th scope="col">id</th>
+                        <th scope="col">title</th>
+                        <th scope="col">price</th>
+                        <th scope="col">description</th>
+                        <th scope="col">sales_start</th>
+                        <th scope="col">amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for el in data.products %}
+                    <tr>
+                        <th scope="row">{{el.id}}</th>
+                        <td>{{el.title}}</td>
+                        <td>{{el.price}}</td>
+                        <td>{{el.description}}</td>
+                        <td>{{el.sales_start}}</td>
+                        <td>{{el.amount}}</td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Categories</title>
+{% endblock %}
+
+{% block nav %}
+<li><a href="/" class="nav-link px-2 text-white">Home</a></li>
+<li><a href="/products" class="nav-link px-2 text-white">Products</a></li>
+<li><a href="/categories" class="nav-link px-2 text-secondary">Categories</a></li>
+<li><a href="/search" class="nav-link px-2 text-white">Search</a></li>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <br><h1>Categories:</h1>
+    <div class="bd-example">
+        <div class="accordion" id="accordionExample">
+        {% for category in data %}
+
+          <div class="accordion-item">
+            <h4 class="accordion-header" id="{{ category.id }}">
+              <button class="accordion-button collapsed text-center" type="button" data-bs-toggle="collapse" data-bs-target="#{{ category.title[0] }}{{ category.id }}" aria-expanded="false" aria-controls="{{ category.title[0] }}{{ category.id }}">
+                  {{ category.title }}
+
+              </button>
+            </h4>
+            <div id="{{ category.title[0] }}{{ category.id }}" class="accordion-collapse collapse" aria-labelledby="{{ category.id }}" data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                  <div class="container">
+                      <div class="container text-center">
+                          <h5>Amount of products: {{ category.products | sum(attribute='amount') }}</h5>
+                          <div class="btn-group">
+                              <a role="button" class="btn btn-outline-secondary" href="/category/{{ category.id }}">View</a>
+                              <a role="button" class="btn btn-outline-secondary" href="/category/edit/{{ category.id }}">Edit</a>
+                              <a role="button" class="btn btn-outline-secondary" href="/category/delete/{{ category.id }}">Delete</a>
+                          </div>
+                      </div>
+                      <br><div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                          {% for product in category.products %}
+                          <div class="col">
+                              <div class="card">
+                                  <div class="card-body">
+                                      <h5 class="card-title">{{ product.title }}</h5>
+                                      <p class="card-text">{{ product.description }}</p>
+                                  </div>
+                                  <ul class="list-group list-group-flush">
+                                      <li class="list-group-item">Price: {{ product.price }}</li>
+                                      <li class="list-group-item">Available items: {{ product.amount }}</li>
+                                      <li class="list-group-item">Sales start: {{ product.sales_start }}</li>
+                                  </ul>
+                                  <div class="card-body">
+                                      <a href="/product/{{ product.id }}" class="card-link">Details</a>
+                                      <a href="#" class="card-link">Another link</a>
+                                  </div>
+                              </div>
+                          </div>
+                          {% endfor %}
+                      </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

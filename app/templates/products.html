@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Products</title>
+{% endblock %}
+
+{% block nav %}
+<li><a href="/" class="nav-link px-2 text-white">Home</a></li>
+<li><a href="/products" class="nav-link px-2 text-secondary">Products</a></li>
+<li><a href="/categories" class="nav-link px-2 text-white">Categories</a></li>
+<li><a href="/search" class="nav-link px-2 text-white">Search</a></li>
+{% endblock %}
+
+{% block body %}
+<div class="album py-5 bg-light">
+    <div class="container">
+      <h1>Available products:</h1>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        {% for el in data %}
+        <div class="col">
+          <div class="card shadow-sm">
+            <img src="{{ el.img_path }}">
+            <div class="card-body">
+              <p class="card-text">{{ el.title }}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                    <a role="button" class="btn btn-outline-secondary" href="/product/{{ el.id }}">View</a>
+                    <a role="button" class="btn btn-outline-secondary" href="/product/edit/{{ el.id }}">Edit</a>
+                    <a role="button" class="btn btn-outline-secondary" href="/product/delete/{{ el.id }}">Delete</a>
+                </div>
+                <small class="text-muted">{{ el.price }} $</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

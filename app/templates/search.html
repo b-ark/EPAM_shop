@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Home</title>
+{% endblock %}
+
+{% block nav %}
+<li><a href="/" class="nav-link px-2 text-white">Home</a></li>
+<li><a href="/products" class="nav-link px-2 text-white">Products</a></li>
+<li><a href="/categories" class="nav-link px-2 text-white">Categories</a></li>
+<li><a href="/search" class="nav-link px-2 text-secondary">Search</a></li>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <br><h1>Search for products, available by certain date:</h1>
+    <form class="form-inline" method="POST">
+        <div class="input-group mb-3">
+          <input type="date" class="form-control" placeholder="Search by date..." aria-label="Search" name="date" id="date" required>
+          <button class="btn btn-success" type="submit">Search</button>
+        </div>
+    </form>
+    {% if request.method == 'POST' %}
+    <div class="bd-example">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">title</th>
+                    <th scope="col">price</th>
+                    <th scope="col">description</th>
+                    <th scope="col">sales_start</th>
+                    <th scope="col">amount</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for el in data %}
+                <tr>
+                    <th scope="row">{{el.id}}</th>
+                    <td><a href="/product/{{ el.id }}" class="card-link">{{el.title}}</a></td>
+                    <td>{{el.price}}</td>
+                    <td>{{el.description}}</td>
+                    <td>{{el.sales_start}}</td>
+                    <td>{{el.amount}}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
