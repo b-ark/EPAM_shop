@@ -1,3 +1,4 @@
+alembic==1.10.2
 Flask==2.2.3
 flask_marshmallow==0.14.0
 Flask_Migrate==4.0.4
