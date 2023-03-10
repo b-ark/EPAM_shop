@@ -5,6 +5,8 @@ python:
 
 install:
   - "pip install -r requirements.txt"
+  - "pip install python-coveralls"
+  - "pip install marshmallow-sqlalchemy"
 
 script:
   - "coverage erase"
