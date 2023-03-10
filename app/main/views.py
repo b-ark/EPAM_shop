@@ -75,6 +75,7 @@ def new_product():
 def show_product(_id):
     """Page to show product by id"""
     item = get_item(Product, _id)
+    print(item.img_path)
     return render_template('product.html', data=item)
 
 
@@ -129,6 +130,8 @@ def edit_product(_id):
 def delete_product(_id):
     """Page to delete product by id"""
     item = get_item(Product, _id)
+    if item.img_path != './static/images/products/default.jpg':
+        os.remove('./app' + item.img_path)
     db_delete(item)
     return redirect('/products')
 

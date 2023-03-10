@@ -1,4 +1,5 @@
-from flask import jsonify
+import unittest
+
 import flask_unittest
 from app.config import Config
 from app import create_app, db
@@ -141,8 +142,5 @@ class ApiTest(flask_unittest.ClientTestCase):
         self.assertEqual(res.json, self.CATEGORY_OBJ)
 
 
-"""if __name__ == '__main__':
-    suite = unittest.TestSuite()
-    suite.addTest(ApiTest('rest_test'))
-    runner = unittest.TextTestRunner()
-    runner.run(suite)"""
+if __name__ == "__main__":
+     unittest.main()

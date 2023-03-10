@@ -1,5 +1,6 @@
 """Modules with RESTful service implementation"""
 from datetime import datetime
+import os
 from flask import request, jsonify
 from app.models import Category, Product, CategorySchema, ProductSchema
 from app.service import db_add, get_item, check_request, db_commit, db_delete
@@ -84,6 +85,8 @@ def rest_product():
 
     if request.method == 'DELETE':
         item = get_item(Product, request.values.get('id'))
+        if item.img_path != './static/images/products/default.jpg':
+            os.remove('./app' + item.img_path)
         db_delete(item)
         return product_schema.jsonify(item)
 
