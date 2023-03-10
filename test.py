@@ -140,7 +140,3 @@ class ApiTest(flask_unittest.ClientTestCase):
         res = client.delete(self.CATEGORY_URL, data={'id': 1})
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.json, self.CATEGORY_OBJ)
-
-
-if __name__ == "__main__":
-     unittest.main()
