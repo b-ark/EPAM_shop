@@ -8,7 +8,7 @@ install:
 
 script:
   - "coverage erase"
-  - "coverage run test.py && coverage html"
+  - "coverage run -m unittest test"
 
 after_success:
   - "coveralls"
