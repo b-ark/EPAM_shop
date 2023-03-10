@@ -8,7 +8,7 @@ install:
 
 script:
   - "coverage erase"
-  - "coverage run shop.py && coverage html"
+  - "coverage run test.py && coverage html"
 
 after_success:
   - "coveralls"
