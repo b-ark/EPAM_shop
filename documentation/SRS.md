@@ -169,7 +169,7 @@ Endpoints for the RESTful web service are:
 
 The major features of application functionality is shown below
 
-[!Installation](ER_model.drawio.png)
+[ER_model](ER_model.drawio.png)
 
 ## 2.3 User Classes and Characteristics ##
 The application doesn't support user privileges.
