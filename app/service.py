@@ -1,7 +1,9 @@
 """Modules with functions / classes to work with DB (CRUD operations)"""
+import os
+from datetime import datetime
 from flask import redirect, abort
 from sqlalchemy import exc
-from app.models import db, Category
+from app.models import db, Category, Product
 
 
 def db_add(element):
@@ -16,11 +18,7 @@ def db_add(element):
 
 def db_commit():
     """Database commit"""
-    try:
-        db.session.commit()
-        return None
-    except exc.SQLAlchemyError:
-        return 'Error'
+    db.session.commit()
 
 
 def db_delete(item):
@@ -48,10 +46,72 @@ def get_item(obj, _id):
     return item
 
 
-def POST_category(request):
+def post_category_service(request):
     """Gets data from POST request and ads it to database (only for Category items)"""
-    title = request.form['title']
-    description = request.form['description']
-    category = Category(title=title, description=description)
-    db_add(category)
-    return redirect('/categories')
+    title = request.values.get('title')
+    description = request.values.get('description')
+    item = Category(title=title, description=description)
+    db_add(item)
+    return item
+
+
+def post_product_service(request):
+    title = request.values.get('title')
+    price = request.values.get('price')
+    description = request.values.get('description')
+    sales_start = datetime.strptime(request.values.get('sales_start'), '%Y-%m-%d').date()
+    amount = request.values.get('amount')
+    category_id = request.values.get('category_id')
+    element = Product(title=title,
+                      price=price,
+                      description=description,
+                      sales_start=sales_start,
+                      amount=amount,
+                      category_id=category_id)
+    db_add(element)
+    return element
+
+
+def put_category_service(_id, request):
+    item = get_item(Category, _id)
+    if check_request(request.values.get('title')):
+        item.title = request.values.get('title')
+    if check_request(request.values.get('description')):
+        item.description = request.values.get('description')
+    db_commit()
+    return item
+
+
+def put_product_service(_id, request):
+    item = get_item(Product, _id)
+
+    if check_request(request.values.get('title')):
+        item.title = request.values.get('title')
+    if check_request(request.values.get('price')):
+        item.price = request.values.get('price')
+    if check_request(request.values.get('description')):
+        item.description = request.values.get('description')
+    if check_request(request.values.get('sales_start')):
+        item.sales_start = datetime.strptime(request.values.get('sales_start'), '%Y-%m-%d').date()
+    if check_request(request.values.get('amount')):
+        item.amount = request.values.get('amount')
+    if check_request(request.values.get('img_path')):
+        item.img_path = request.values.get('img_path')
+    if check_request(request.values.get('category_id')):
+        item.category_id = request.values.get('category_id')
+    db_commit()
+    return item
+
+
+def delete_category_service(_id):
+    item = get_item(Category, _id)
+    db_delete(item)
+    return item
+
+
+def delete_product_service(_id):
+    item = get_item(Product, _id)
+    if item.img_path != './static/images/products/default.jpg':
+        os.remove('./app' + item.img_path)
+    db_delete(item)
+    return item

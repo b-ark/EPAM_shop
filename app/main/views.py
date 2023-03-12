@@ -2,8 +2,10 @@
 from datetime import datetime
 import os
 from flask import render_template, request, redirect
-from app.models import Category, Product, db
-from app.service import POST_category, get_item, db_commit, db_delete, db_add
+from app.models import Category, Product
+from app.service import get_item, db_commit, db_delete, db_add, check_request, \
+    post_product_service, post_category_service, put_category_service, put_product_service, \
+    delete_product_service, delete_category_service
 from app.main import bp
 from app.config import Config
 
@@ -32,7 +34,8 @@ def products():
 def new_category():
     """Page with the form to add new category"""
     if request.method == 'POST':
-        return POST_category(request)
+        post_category_service(request)
+        return redirect('/categories')
     # request.method == 'GET'
     return render_template('create_category.html')
 
@@ -41,21 +44,7 @@ def new_category():
 def new_product():
     """Page with the form to add new product"""
     if request.method == 'POST':
-        title = request.form['title']
-        price = request.form['price']
-        description = request.form['description']
-        sales_start = datetime.strptime(request.form['sales_start'], '%Y-%m-%d').date()
-        amount = request.form['amount']
-        category_title = request.form['category_title']
-        parent = Category.query.filter_by(title=category_title).first()
-
-        product = Product(title=title,
-                          price=price,
-                          description=description,
-                          sales_start=sales_start,
-                          amount=amount,
-                          category_id=parent.id)
-        db_add(product)
+        post_product_service(request)
         obj = Product.query.order_by(Product.id.desc()).first()
         if "file" not in request.files:
             return 'No file part'
@@ -101,10 +90,7 @@ def search():
 def edit_category(_id):
     """Page to edit category by id"""
     if request.method == 'POST':
-        item = get_item(Category, _id)
-        item.title = request.form['title']
-        item.description = request.form['description']
-        db_commit()
+        put_category_service(_id, request)
         return redirect('/categories')
     # request.method == 'GET'
     item = get_item(Category, _id)
@@ -115,10 +101,7 @@ def edit_category(_id):
 def edit_product(_id):
     """Page to edit product by id"""
     if request.method == 'POST':
-        item = get_item(Product, _id)
-        item.title = request.form['title']
-        item.description = request.form['description']
-        db_commit()
+        put_product_service(_id, request)
         return redirect('/products')
     # request.method == 'GET' functionality
     item = get_item(Product, _id)
@@ -129,16 +112,12 @@ def edit_product(_id):
 @bp.route('/product/delete/<int:_id>', methods=['GET'])
 def delete_product(_id):
     """Page to delete product by id"""
-    item = get_item(Product, _id)
-    if item.img_path != './static/images/products/default.jpg':
-        os.remove('./app' + item.img_path)
-    db_delete(item)
+    delete_product_service(_id)
     return redirect('/products')
 
 
 @bp.route('/category/delete/<int:_id>', methods=['GET'])
 def delete_category(_id):
     """Page to delete category by id"""
-    item = get_item(Category, _id)
-    db_delete(item)
+    delete_category_service(_id)
     return redirect('/categories')

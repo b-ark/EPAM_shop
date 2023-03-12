@@ -20,12 +20,11 @@
 
           <div class="accordion-item">
             <h4 class="accordion-header" id="{{ category.id }}">
-              <button class="accordion-button collapsed text-center" type="button" data-bs-toggle="collapse" data-bs-target="#{{ category.title[0] }}{{ category.id }}" aria-expanded="false" aria-controls="{{ category.title[0] }}{{ category.id }}">
+              <button class="accordion-button collapsed text-center" type="button" data-bs-toggle="collapse" data-bs-target="#category{{ category.id }}" aria-expanded="false" aria-controls="category{{ category.id }}">
                   {{ category.title }}
-
               </button>
             </h4>
-            <div id="{{ category.title[0] }}{{ category.id }}" class="accordion-collapse collapse" aria-labelledby="{{ category.id }}" data-bs-parent="#accordionExample">
+            <div id="category{{ category.id }}" class="accordion-collapse collapse" aria-labelledby="{{ category.id }}" data-bs-parent="#accordionExample">
               <div class="accordion-body">
                   <div class="container">
                       <div class="container text-center">

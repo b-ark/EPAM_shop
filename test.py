@@ -1,8 +1,9 @@
 import unittest
-
 import flask_unittest
 from app.config import Config
 from app import create_app, db
+from app.models import Category
+from app.service import db_add, db_delete
 
 
 class TestConfig(Config):
@@ -52,13 +53,13 @@ class ApiTest(flask_unittest.ClientTestCase):
 
     def test_01_post_category(self, client):
         """POST request to /api/category; adds new item to database"""
-        res = client.post(self.CATEGORY_URL, data=self.CATEGORY_OBJ)
+        res = client.post(self.CATEGORY_URL, query_string=self.CATEGORY_OBJ)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.json, self.CATEGORY_OBJ)
 
     def test_02_post_product(self, client):
         """POST request to /api/product; adds new item to database"""
-        res = client.post(self.PRODUCT_URL, data=self.PRODUCT_OBJ)
+        res = client.post(self.PRODUCT_URL, query_string=self.PRODUCT_OBJ)
         self.CATEGORY_OBJ['products'].append(self.PRODUCT_OBJ)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.json, self.PRODUCT_OBJ)
@@ -71,7 +72,7 @@ class ApiTest(flask_unittest.ClientTestCase):
 
     def test_04_put_category(self, client):
         """PUT request to /api/category with only 1 parameter (title) changes an item in database"""
-        res = client.put(self.CATEGORY_URL, data={'id': 1, 'title': 'category_test_put'})
+        res = client.put(self.CATEGORY_URL, query_string={'id': 1, 'title': 'category_test_put'})
         new_category = self.CATEGORY_OBJ
         new_category['title'] = 'category_test_put'
         self.assertEqual(res.status_code, 200)
@@ -79,7 +80,7 @@ class ApiTest(flask_unittest.ClientTestCase):
 
     def test_05_put_category(self, client):
         """PUT request to /api/category with all possible parameters; changes an item in database"""
-        res = client.put(self.CATEGORY_URL, data={'id': 1} | self.CATEGORY_OBJ)
+        res = client.put(self.CATEGORY_URL, query_string={'id': 1} | self.CATEGORY_OBJ)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.json, self.CATEGORY_OBJ)
 
@@ -97,7 +98,7 @@ class ApiTest(flask_unittest.ClientTestCase):
 
     def test_08_put_product(self, client):
         """PUT request to /api/product with only 1 parameter (title); changes an item in database"""
-        res = client.put(self.PRODUCT_URL, data={'id': 1, 'title': 'product_test_put'})
+        res = client.put(self.PRODUCT_URL, query_string={'id': 1, 'title': 'product_test_put'})
         new_product = self.PRODUCT_OBJ
         new_product['title'] = 'product_test_put'
         self.assertEqual(res.status_code, 200)
@@ -105,7 +106,7 @@ class ApiTest(flask_unittest.ClientTestCase):
 
     def test_09_put_product(self, client):
         """PUT request to /api/product with all possible parameters; changes an item in database"""
-        res = client.put(self.PRODUCT_URL, data={'id': 1} | self.PRODUCT_OBJ)
+        res = client.put(self.PRODUCT_URL, query_string={'id': 1} | self.PRODUCT_OBJ)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.json, self.PRODUCT_OBJ)
 
@@ -128,6 +129,11 @@ class ApiTest(flask_unittest.ClientTestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.json, [self.PRODUCT_OBJ])
 
+    def test_13_get_abort(self, client):
+        """GET request to /api/category with non-existing id"""
+        res = client.get(self.CATEGORY_URL, query_string={'id': 100})
+        self.assertEqual(res.status_code, 404)
+
     def test_13_delete_product(self, client):
         """DELETE request to /api/product; deletes item from database"""
         res = client.delete(self.PRODUCT_URL, data={'id': 1})
@@ -140,3 +146,30 @@ class ApiTest(flask_unittest.ClientTestCase):
         res = client.delete(self.CATEGORY_URL, data={'id': 1})
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.json, self.CATEGORY_OBJ)
+
+
+class ServiceTest(unittest.TestCase):
+    app = create_app(TestConfig)
+    app_context = app.app_context()
+
+    @classmethod
+    def setUpClass(cls):
+
+        cls.app_context.push()
+        db.create_all()
+
+    @classmethod
+    def tearDownClass(cls):
+        db.session.remove()
+        db.drop_all()
+        cls.app_context.pop()
+
+    def test_01_failed_db_add(self):
+        """Exception on the db_add function"""
+        item = Category(title=1)
+        self.assertEqual('Error', db_add(item))
+
+    def test_02_failed_db_delete(self):
+        """Exception on the db_delete function"""
+        item = Category(title='title', description='description')
+        self.assertEqual('Error', db_delete(item))
