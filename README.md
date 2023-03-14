@@ -26,5 +26,6 @@ Before building this project, make sure that the latest version of Python is ins
 2. Navigate to the EPAM_shop directory: `cd EPAM_shop`
 3. Create and activate new Virtual Environment: `python3 -m virtualenv venv` + `source venv/bin/activate`
 4. Install requirements `ip install -r requirements.txt`
-4.1. If you want to deploy the web service on [Gunicorn](https://gunicorn.org/), install it to the project: `pip install gunicorn`
-That's it, you are ready to go! Run application using Flask: `flask run` or using Gunicorn: 'gunicorn wsgi:app'
+5. If you want to deploy the web service on [Gunicorn](https://gunicorn.org/), install it to the project: `pip install gunicorn`
+
+That's it, you are ready to go! Run application using Flask: `flask run` or using Gunicorn: `gunicorn wsgi:app`
