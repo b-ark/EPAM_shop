@@ -25,7 +25,7 @@ Before building this project, make sure that the latest version of Python is ins
 1. Clone repository: `git clone https://github.com/b-ark/EPAM_shop`
 2. Navigate to the EPAM_shop directory: `cd EPAM_shop`
 3. Create and activate new Virtual Environment: `python3 -m virtualenv venv` + `source venv/bin/activate`
-4. Install requirements `ip install -r requirements.txt`
+4. Install requirements `pip install -r requirements.txt`
 5. If you want to deploy the web service on [Gunicorn](https://gunicorn.org/), install it to the project: `pip install gunicorn`
 
 That's it, you are ready to go! Run application using Flask: `flask run` or using Gunicorn: `gunicorn wsgi:app`
