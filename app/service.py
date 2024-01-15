@@ -61,7 +61,11 @@ def post_product_service(request):
     description = request.values.get('description')
     sales_start = datetime.strptime(request.values.get('sales_start'), '%Y-%m-%d').date()
     amount = request.values.get('amount')
-    category_id = request.values.get('category_id')
+    if request.values.get('category_id') is not None:
+        category_id = request.values.get('category_id')
+    else:
+        cat = Category.query.filter_by(title=request.values.get('category_title')).first()
+        category_id = cat.id
     element = Product(title=title,
                       price=price,
                       description=description,
